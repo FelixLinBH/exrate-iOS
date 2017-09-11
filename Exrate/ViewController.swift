@@ -8,7 +8,8 @@
 
 import UIKit
 import SocketIO
-let socket = SocketIOClient(socketURL: URL(string: "http://18.221.63.20:80")!, config: [.log(true), .compress])
+import LZCompression
+let socket = SocketIOClient(socketURL: URL(string: "http://18.221.63.20:80")!, config: [.log(false), .compress])
 
 
 class ViewController: UIViewController {
@@ -20,33 +21,34 @@ class ViewController: UIViewController {
             print("socket connected")
         }
         
-        socket.on("connect") {data, ack in
-            print("socket connected")
-        }
-        socket.on(clientEvent: .error) { (data, error) in
-            print(data)
-            print(error)
-        }
+
         socket.on("message") {data, ack in
-            print(data[0])
-//            if let cur = data[0] as? Double {
-//                socket.emitWithAck("canUpdate", cur).timingOut(after: 0) {data in
-//                    socket.emit("update", ["amount": cur + 2.50])
-//                }
-//                
-//                ack.with("Got your currentAmount", "dude")
-//            }
+            if let dictionary = data[0] as? [String: Any] {
+
+                
+                for (key, value) in dictionary {
+                    // access all key / value pairs in dictionary
+                    print(key)
+                    let decompressValue = (value as! String)
+                    print(decompressValue.decompressLZFromUTF16())
+                    
+                }
+                
+            }
         }
         
         socket.on("event") {data, ack in
             print(data[0])
-            //            if let cur = data[0] as? Double {
-            //                socket.emitWithAck("canUpdate", cur).timingOut(after: 0) {data in
-            //                    socket.emit("update", ["amount": cur + 2.50])
-            //                }
-            //
-            //                ack.with("Got your currentAmount", "dude")
-            //            }
+            if let action = data[0] as? String {
+                switch action {
+                    case "end":
+                        socket.disconnect()
+                    default:
+                        print("nothing")
+                }
+                
+            }
+            
         }
         
         socket.connect()
