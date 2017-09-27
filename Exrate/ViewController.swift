@@ -9,7 +9,7 @@
 import UIKit
 import SocketIO
 import LZCompression
-let socket = SocketIOClient(socketURL: URL(string: "http://18.221.63.20:80")!, config: [.log(false), .compress])
+let socket = SocketIOClient(socketURL: URL(string: "https://www.exrate.info")!, config: [.log(false), .compress])
 
 
 class ViewController: UIViewController {

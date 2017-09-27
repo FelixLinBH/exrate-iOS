@@ -10,6 +10,9 @@ target 'Exrate' do
   pod 'LZCompression'
   pod 'RxSwift',    '~> 3.0'
   pod 'RxCocoa',    '~> 3.0'
+  pod 'PreviewTransition'
+  pod 'MEVFloatingButton'
+  pod 'pop'
   target 'ExrateTests' do
     inherit! :search_paths
     # Pods for testing
